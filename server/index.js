@@ -25,11 +25,14 @@ function publicParticipant(p, revealed) {
   }
 }
 
+const FINAL_CHOICES = new Set([0, 1, 2, 3, 5, 8, 13, 21])
+
 function publicSession(session) {
   return {
     code: session.code,
     story: session.story,
     revealed: session.revealed,
+    finalVote: session.finalVote,
     history: session.history,
     participants: [...session.participants.values()].map((p) => publicParticipant(p, session.revealed)),
   }
@@ -45,6 +48,7 @@ function sessionAverage(session) {
 
 function clearVotes(session) {
   session.revealed = false
+  session.finalVote = null
   for (const p of session.participants.values()) p.vote = null
 }
 
@@ -98,6 +102,7 @@ wss.on('connection', (ws) => {
         code,
         story: '',
         revealed: false,
+        finalVote: null,
         history: [],
         participants: new Map([[participant.id, participant]]),
       }
@@ -141,8 +146,12 @@ wss.on('connection', (ws) => {
       const avg = sessionAverage(currentSession)
       if (avg !== null) {
         const storyText =
-          currentSession.story.trim() || `${currentSession.history.length + 1}. Eingabe`
-        currentSession.history.push({ story: storyText, average: avg })
+          currentSession.story.trim() || `${currentSession.history.length + 1}. Story`
+        currentSession.history.push({
+          story: storyText,
+          average: avg,
+          final: currentSession.finalVote,
+        })
       }
       currentSession.story = ''
       clearVotes(currentSession)
@@ -153,6 +162,16 @@ wss.on('connection', (ws) => {
     if (msg.type === 'clearVotes') {
       clearVotes(currentSession)
       broadcast(currentSession)
+      return
+    }
+
+    if (msg.type === 'setFinal') {
+      if (!currentSession.revealed) return
+      const value = msg.value
+      if (value === null || FINAL_CHOICES.has(value)) {
+        currentSession.finalVote = value
+        broadcast(currentSession)
+      }
       return
     }
 

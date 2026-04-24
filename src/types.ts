@@ -11,12 +11,14 @@ export interface Participant {
 export interface HistoryEntry {
   story: string
   average: number
+  final: number | null
 }
 
 export interface SessionState {
   code: string
   story: string
   revealed: boolean
+  finalVote: number | null
   history: HistoryEntry[]
   participants: Participant[]
 }

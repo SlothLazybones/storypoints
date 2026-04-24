@@ -325,11 +325,74 @@ button.secondary:disabled {
 .havg {
   flex-shrink: 0;
   padding: 4px 10px;
-  background: var(--accent);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.hfinal {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  background: var(--success);
   color: white;
   border-radius: 6px;
   font-weight: 700;
   font-size: 14px;
+}
+
+.result.final {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 100;
+}
+
+.overlay-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.overlay-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.overlay-close {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.overlay-close:hover {
+  color: var(--text);
 }
 
 .result {

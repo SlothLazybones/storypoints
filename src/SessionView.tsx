@@ -5,6 +5,7 @@ import type { Vote } from './types'
 type Api = ReturnType<typeof useSession>
 
 const CARDS: Vote[] = [0, 1, 2, 3, 5, 8, 13, 21, '?', '☕']
+const FINAL_CARDS: number[] = [0, 1, 2, 3, 5, 8, 13, 21]
 
 function average(votes: Vote[]): string {
   const nums = votes.filter((v): v is number => typeof v === 'number')
@@ -15,6 +16,7 @@ function average(votes: Vote[]): string {
 
 export function SessionView({ api }: { api: Api }) {
   const [copied, setCopied] = useState(false)
+  const [finalOpen, setFinalOpen] = useState(false)
   const { session, self } = api
   if (!session || !self) return null
 
@@ -99,6 +101,14 @@ export function SessionView({ api }: { api: Api }) {
         ) : (
           <>
             <div className="result">Ø {average(votes)}</div>
+            {session.finalVote !== null && session.finalVote !== undefined && (
+              <div className="result final">Final {session.finalVote}</div>
+            )}
+            <button className="secondary" onClick={() => setFinalOpen(true)}>
+              {session.finalVote !== null && session.finalVote !== undefined
+                ? 'Final anpassen'
+                : 'Final festlegen'}
+            </button>
             <button className="primary" onClick={api.reset}>
               Neue Runde
             </button>
@@ -109,6 +119,33 @@ export function SessionView({ api }: { api: Api }) {
         )}
       </section>
 
+      {finalOpen && (
+        <div className="overlay" onClick={() => setFinalOpen(false)}>
+          <div className="overlay-panel" onClick={(e) => e.stopPropagation()}>
+            <div className="overlay-header">
+              <h2>Final Story Points</h2>
+              <button className="overlay-close" onClick={() => setFinalOpen(false)}>
+                ×
+              </button>
+            </div>
+            <div className="cards">
+              {FINAL_CARDS.map((c) => (
+                <button
+                  key={c}
+                  className={'card-btn' + (session.finalVote === c ? ' selected' : '')}
+                  onClick={() => {
+                    api.setFinal(session.finalVote === c ? null : c)
+                    setFinalOpen(false)
+                  }}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {history.length > 0 && (
         <section className="history">
           <h2>Historie</h2>
@@ -117,6 +154,9 @@ export function SessionView({ api }: { api: Api }) {
               <li key={i}>
                 <span className="hstory">{h.story}</span>
                 <span className="havg">Ø {h.average.toFixed(1)}</span>
+                {h.final !== null && h.final !== undefined && (
+                  <span className="hfinal">Final {h.final}</span>
+                )}
               </li>
             ))}
           </ul>

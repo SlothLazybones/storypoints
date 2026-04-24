@@ -60,6 +60,10 @@ export function useSession() {
     (text: string) => send({ type: 'setStory', text }),
     [send],
   )
+  const setFinal = useCallback(
+    (value: number | null) => send({ type: 'setFinal', value }),
+    [send],
+  )
 
   return {
     connected,
@@ -73,5 +77,6 @@ export function useSession() {
     reset,
     clearVotes,
     setStory,
+    setFinal,
   }
 }
