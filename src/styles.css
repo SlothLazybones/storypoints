@@ -317,9 +317,18 @@ button.secondary:disabled {
 
 .hstory {
   font-weight: 500;
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.hvalues {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .havg {

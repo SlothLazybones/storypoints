@@ -146,23 +146,6 @@ export function SessionView({ api }: { api: Api }) {
         </div>
       )}
 
-      {history.length > 0 && (
-        <section className="history">
-          <h2>Historie</h2>
-          <ul>
-            {history.map((h, i) => (
-              <li key={i}>
-                <span className="hstory">{h.story}</span>
-                <span className="havg">Ø {h.average.toFixed(1)}</span>
-                {h.final !== null && h.final !== undefined && (
-                  <span className="hfinal">Final {h.final}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
       <section className="cards">
         {CARDS.map((c) => (
           <button
@@ -175,6 +158,25 @@ export function SessionView({ api }: { api: Api }) {
           </button>
         ))}
       </section>
+
+      {history.length > 0 && (
+        <section className="history">
+          <h2>Historie</h2>
+          <ul>
+            {history.map((h, i) => (
+              <li key={i}>
+                <span className="hstory">{h.story}</span>
+                <span className="hvalues">
+                  <span className="havg">Ø {h.average.toFixed(1)}</span>
+                  {h.final !== null && h.final !== undefined && (
+                    <span className="hfinal">Final {h.final}</span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   )
 }
