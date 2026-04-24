@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ServerMessage, SessionState, Self, Vote } from './types'
 
 const WS_URL =
+  (import.meta.env.VITE_WS_URL as string | undefined) ||
   (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws'
 
 export function useSession() {
